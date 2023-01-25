@@ -1,0 +1,24 @@
+.stylish-button {
+  background-color: lightcyan;
+  color: #333;
+  padding: 15px 30px;
+  margin: 20px;
+  border-radius: 50px;
+  border: 2px solid #333;
+  font-size: 1.3em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0px 5px 10px #eee;
+}
+.stylish-button:hover {
+  background-color: #333;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0px 10px 20px #aaa;
+}
+.stylish-button:active {
+  transform: translateY(2px);
+  box-shadow: 0px 5px 10px #aaa;
+}
