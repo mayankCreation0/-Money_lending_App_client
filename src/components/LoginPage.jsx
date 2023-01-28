@@ -5,18 +5,21 @@ import {
   Box,
   InputRightAddon,
   InputGroup,
+  Heading,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { context } from "../AuthContext/context";
-import '../styles/login.style.css'
+import "../styles/login.style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+// import png from ' ../assets/Gmail_Logo_16px.png';
 
 const LoginPage = () => {
   const { authstate, fnauthstate, falseAuthState } = useContext(context);
   const [input, setInput] = useState({
-    email: "",
+    Username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -26,82 +29,116 @@ const LoginPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-
-  const handleSubmit = (event) => {
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (input.email === "admin@123") {
-      fnauthstate();
-      console.log(authstate);
-    } else {
-      falseAuthState();
-      console.log("hello", authstate);
+    try {
+      const res = await axios.post("http://localhost:8080/login", input);
+      console.log(res.data.token);
+      if(res.data.token)
+      {
+        localStorage.setItem("token", res.data.token);
+        fnauthstate();
+      }
+      else{
+        falseAuthState();
+      }
+    } catch (e) {
+      console.log(e);
     }
-    console.log(input.email);
   };
   return (
     <div>
       {authstate ? (
-        <Navigate to="/dashboard" />
+        <Navigate to="/home" />
       ) : (
-        <Box
-          w="100vw"
-          h="100vh"
-          bg="teal"
-          backgroundSize="cover"
-          backgroundPosition="center"
-          alignItems="center"
-          justifyContent="center"
-          display="flex"
-        >
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              backgroundColor: "rgb(248,248,255)",
-              padding: "20px",
-              width: "50%",
-              height: "auto",
-              borderRadius: "20px",
-            }}
+        <>
+          <Box
+            w="100vw"
+            h="100vh"
+            backgroundImage="linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1)"
+            backgroundSize="cover"
+            backgroundPosition="center"
+            alignItems="center"
+            justifyContent="center"
+            display="flex"
           >
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                onChange={handleChange}
-                placeholder="Enter your email address"
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <InputGroup>
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                // backgroundImage:
+                //   "linear-gradient(to right top, #d2d7e0, #c8d3d7, #c3cdcd, #c1c7c3, #bfc0bc)",
+                backgroundColor: "#FFF",
+                padding: "20px",
+                width: "50%",
+                height: "auto",
+                borderRadius: "20px",
+              }}
+            >
+              <Heading
+                as="h1"
+                size={["md", "xl"]}
+                color="teal"
+                fontSize="4xl"
+                fontWeight="medium"
+              >
+                WELCOME
+              </Heading>
+              <FormControl>
+                <FormLabel htmlFor="String">Username</FormLabel>
                 <Input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
+                  type="String"
+                  id="email"
+                  name="Username"
+                  border="1px solid black"
+                  bg="white"
+                  ref={inputRef}
                   onChange={handleChange}
+                  placeholder="Enter your email address"
                 />
-                <InputRightAddon
-                  onClick={() => setShowPassword(!showPassword)}
-                  cursor="pointer"
-                >
-                  <FontAwesomeIcon
-                    icon={showPassword ? faEye : faEyeSlash}
-                    cursor="pointer"
-                    onClick={() => setShowPassword(!showPassword)}
-                    size="lg"
-                  />
-                </InputRightAddon>
-              </InputGroup>
-            </FormControl>
+              </FormControl>
 
-            <button className="stylish-button" type="submit">
-              Login
-            </button>
-          </form>
-        </Box>
+              <FormControl mt={4}>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    bg="white"
+                    // ref={inputRef}
+                    border="1px solid black"
+                    placeholder="Enter your password"
+                    onChange={handleChange}
+                  />
+                  <InputRightAddon
+                    onClick={() => setShowPassword(!showPassword)}
+                    cursor="pointer"
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEye : faEyeSlash}
+                      cursor="pointer"
+                      border="1px solid black"
+                      onClick={() => setShowPassword(!showPassword)}
+                      size="lg"
+                    />
+                  </InputRightAddon>
+                </InputGroup>
+              </FormControl>
+
+              <button className="stylish-button" type="submit">
+                LOGIN
+              </button>
+              <button class="gmail-button">
+                <i class="fa fa-google"></i>
+                Continue with Gmail
+              </button>
+            </form>
+          </Box>
+        </>
       )}
     </div>
   );

@@ -1,0 +1,40 @@
+.table-data {
+  font-family: "Ubuntu", sans-serif;
+  border-collapse: collapse;
+  overflow-x: auto;
+  width: 100%;
+}
+.table-data td {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.table-data th,
+.table-data td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-data th {
+  background-color: #eeee00;
+  height: 50px;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+  font-size: 1.2rem;
+  padding: 10px;
+  margin: 10px;
+  text-transform: uppercase;
+}
+tr:hover {
+  background-color: rgb(243, 225, 243);
+}
+.table-data thead {
+  position: sticky;
+  top: 79px;
+  z-index: 99;
+}
+/* .table-data{
+  overflow: auto;
+} */

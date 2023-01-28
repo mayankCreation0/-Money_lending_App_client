@@ -1,6 +1,8 @@
 .stylish-button {
-  background-color: lightcyan;
+  /* background-image: linear-gradient(to right top, #3dbee3, #7eacf0, #c292d7, #e67d9f, #dd7e61); */
+  /* background-image: linear-gradient(to right top, #d9d4d7, #dbd1da, #d9cedf, #d4cce6, #cacced, #bbd1f7, #a7d8fc, #91defc, #80e9f0, #8bf0d8, #aef4ba, #dbf29f); */
   color: #333;
+  background-color: lavender;
   padding: 15px 30px;
   margin: 20px;
   border-radius: 50px;
@@ -13,7 +15,7 @@
   box-shadow: 0px 5px 10px #eee;
 }
 .stylish-button:hover {
-  background-color: #333;
+  background-image: linear-gradient(to right top, #241818, #32222c, #353146, #25445c, #035763);
   color: white;
   transform: translateY(-3px);
   box-shadow: 0px 10px 20px #aaa;
@@ -21,4 +23,26 @@
 .stylish-button:active {
   transform: translateY(2px);
   box-shadow: 0px 5px 10px #aaa;
+}
+.gmail-button {
+    background-color: #4285F4;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.gmail-button::before {
+    content: "";
+    background-image: url('https://www.freepnglogos.com/uploads/logo-gmail-png/logo-gmail-png-gmail-icon-download-png-and-vector-1.png');
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: -4px;
 }
