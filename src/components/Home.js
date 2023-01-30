@@ -19,6 +19,7 @@ import {
   Text,
   Link,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
@@ -31,6 +32,7 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customer, setCustomer] = useState({});
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +53,13 @@ const HomePage = () => {
       }, 1000);
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Something went wrong",
+        description: "We've created your account for you.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     }
   };
 

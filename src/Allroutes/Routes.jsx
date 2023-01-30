@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
+import EditPage from "../components/EditPage";
 import Footer from "../components/Footer";
 import HomePage from "../components/Home";
 import LoginPage from "../components/LoginPage";
@@ -45,12 +46,20 @@ function AllRoutes() {
           }
         />
         <Route
+          path="/editpage/:id"
+          element={
+            <PrivateRoute>
+              <Navbar />
+              <EditPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/userdetails/:id"
           element={
             <PrivateRoute>
               <Navbar />
               <UserDetails />
-              <Footer />
             </PrivateRoute>
           }
         />

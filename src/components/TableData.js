@@ -13,6 +13,7 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   MenuDivider,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -22,20 +23,40 @@ import "../styles/tableData.css";
 function TableData() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [dataPerPage, setDataPerPage] = useState(15);
+  const toast = useToast();
+  const search = (q) => {
+    const query = q.trim().toLowerCase();
+    return data.filter(
+      (el) =>
+        el.Name.trim().toLowerCase().includes(query) ||
+        el.Category.trim().toLowerCase().includes(query) ||
+        el.Address.trim().toLowerCase().includes(query)
+    );
+  };
   useEffect(() => {
+    console.log(search("gold"));
     const token = localStorage.getItem("token");
 
     const headers = {
       Authorization: `Bearer ${token}`,
     };
     axios
-      .get("http://localhost:8080/coustomer", { headers })
+      .get(`http://localhost:8080/coustomer`, { headers })
       .then((response) => {
         setData(response.data);
         setLoading(false);
         console.log(response.data);
       })
       .catch((error) => {
+        toast({
+          title: "Something went wrong",
+          description: "We've created your account for you.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
         console.log(error);
         setLoading(false);
       });
@@ -87,13 +108,35 @@ function TableData() {
                 padding: "10px",
               }}
             >
-              Renew & Running
+              Renew
             </div>
           </Td>
         );
       default:
         return <Td>{status}</Td>;
     }
+  }
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = data.slice(
+    indexOfFirstData,
+    indexOfLastData + dataPerPage
+  );
+  console.log(
+    currentData,
+    dataPerPage,
+    data,
+    indexOfFirstData,
+    indexOfLastData
+  );
+  function handleClick(event, index) {
+    setCurrentPage(index);
+  }
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(data.length / dataPerPage); i++) {
+    pageNumbers.push(i);
   }
 
   return (
@@ -109,23 +152,6 @@ function TableData() {
         />
       ) : (
         <>
-          {/* <Menu closeOnSelect={false}>
-            <MenuButton as={Button} colorScheme="blue">
-              MenuItem
-            </MenuButton>
-            <MenuList minWidth="240px">
-              <MenuOptionGroup defaultValue="asc" title="Order" type="radio">
-                <MenuItemOption value="asc">Ascending</MenuItemOption>
-                <MenuItemOption value="desc">Descending</MenuItemOption>
-              </MenuOptionGroup>
-              <MenuDivider />
-              <MenuOptionGroup title="Country" type="checkbox">
-                <MenuItemOption value="email">Email</MenuItemOption>
-                <MenuItemOption value="phone">Phone</MenuItemOption>
-                <MenuItemOption value="country">Country</MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu> */}
           <Table
             className="table-data"
             css={{
@@ -173,7 +199,7 @@ function TableData() {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((row) => {
+              {currentData.map((row) => {
                 return (
                   <Tr key={row._id}>
                     <Td>{row._id}</Td>
@@ -185,14 +211,16 @@ function TableData() {
                     <Td>{row.Amount}</Td>
                     <Td>{row.Rate}</Td>
                     <Td>
-                      <Button
-                        color="green"
-                        bg="rgb(198, 191, 191)"
-                        mr={1}
-                        width="70px"
-                      >
-                        &#x270E;Edit
-                      </Button>
+                      <Link to={`/editpage/${row._id}`}>
+                        <Button
+                          color="green"
+                          bg="rgb(198, 191, 191)"
+                          mr={1}
+                          width="70px"
+                        >
+                          &#x270E;Edit
+                        </Button>
+                      </Link>
                       <Link to={`/userdetails/${row._id}`}>
                         <Button color="black" bg="blue" mr={1} width="70px">
                           &#128065;View
@@ -213,6 +241,13 @@ function TableData() {
           </Table>
         </>
       )}
+      <div className="pagination">
+        {pageNumbers.map((number, index) => (
+          <Button key={number} onClick={(event) => handleClick(event, index)}>
+            {number}
+          </Button>
+        ))}
+      </div>
     </>
   );
 }

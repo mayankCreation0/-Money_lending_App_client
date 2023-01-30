@@ -6,6 +6,7 @@ import {
   InputRightAddon,
   InputGroup,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router-dom";
@@ -22,6 +23,7 @@ const LoginPage = () => {
     Username: "",
     password: "",
   });
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e) => {
     setInput({
@@ -41,12 +43,33 @@ const LoginPage = () => {
       if(res.data.token)
       {
         localStorage.setItem("token", res.data.token);
+        toast({
+          title: 'LoggedIn Sucessfully.',
+          description: "We've created your account for you.",
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+        })
         fnauthstate();
       }
       else{
+        toast({
+          title: "Invalid credentials",
+          description: "",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
         falseAuthState();
       }
     } catch (e) {
+      toast({
+        title: "Invalid credentials",
+        description: "",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
       console.log(e);
     }
   };
