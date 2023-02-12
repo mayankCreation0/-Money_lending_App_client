@@ -54,7 +54,7 @@ function TableData() {
         Authorization: `Bearer ${token}`,
       };
       setLoading(true)
-      axios.get(`http://localhost:8080/coustomer/${searchTerm}?category=${selectedFilter}&sortBy=date:${selectedOption}`, { headers })
+      axios.get(`https://fantastic-hen-cloak.cyclic.app/coustomer/${searchTerm}?category=${selectedFilter}&sortBy=date:${selectedOption}`, { headers })
         .then((response) => {
           setFilteredData(response.data);
           console.log(response.data)

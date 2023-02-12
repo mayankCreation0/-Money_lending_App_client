@@ -77,14 +77,8 @@
   padding: 10px 5px;
   gap: 30px;
   list-style-type: none;
-  /* border: 1px solid red; */
-  /* justify-content: center; */
   align-items: center;
 }
-/* .sign-in {
-  padding-right: 50px;
-  align-self: center;
-}*/
 .signup-btn {
   padding: 10px 10px;
   margin-top:20px;
@@ -106,21 +100,20 @@
 .search-container {
   position: relative;
   display: inline-block;
-  width: 50%;
+  width: 20%;
 }
 
-.search-container input[type=text] {
+  .search-container input[type=text] {
   padding: 6px;
   font-size: 17px;
   border: none;
   width: calc(100% - 40px);
-  box-shadow: 0 0 0px #000;
   transition: width 0.4s ease-in-out;
   border-radius: 10px;
-  -webkit-appearance: none; /* added this */
+  -webkit-appearance: none;
   outline: none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
-
 .search-container input[type=text]:focus {
   width: 100%;
   box-shadow: 0 0 5px rgb(0, 0, 255);
@@ -130,13 +123,14 @@
 
 .search-container button {
   position: absolute;
-  right: 0px;
+  right: 30px;
   top: 0;
-  padding: 6px 10px;
-  background-color: #ddd;
+  padding: 6px 15px;
+  background-color: transparent;
   font-size: 17px;
   border: none; 
   cursor: pointer;
+  width: 10%;
 }
 
 @media (max-width: 780px) {
