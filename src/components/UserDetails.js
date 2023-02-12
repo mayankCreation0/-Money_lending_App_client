@@ -1,10 +1,9 @@
-import { Button, Flex, Heading, Image, Spinner } from "@chakra-ui/react";
+import {  Flex, Heading, Image, Spinner } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Text, Stack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-// import "../styles/userDetails.css";
 
 function UserDetails() {
   const [data, setData] = useState([]);
@@ -17,7 +16,9 @@ function UserDetails() {
       Authorization: `Bearer ${token}`,
     };
     axios
-      .get(`http://localhost:8080/coustomer/${id}`, { headers })
+      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`, {
+        headers,
+      })
       .then((response) => {
         setData(response.data);
         setLoading(false);
@@ -175,13 +176,22 @@ function UserDetails() {
                   </Box>
                   <Box width="30%">
                     <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Created Date: {new Date(data.date).toLocaleDateString()}
+                      Created Date:{" "}
+                      {new Date(data.createdAt).toLocaleDateString("default", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
                     </Text>
                   </Box>
                   <Box width="30%">
                     <Text fontWeight="bold" fontSize="lg" color="#333">
                       Last updated Date:{" "}
-                      {new Date(data.updatedAt).toLocaleDateString()}
+                      {new Date(data.updatedAt).toLocaleDateString("default", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
                     </Text>
                   </Box>
                 </Flex>

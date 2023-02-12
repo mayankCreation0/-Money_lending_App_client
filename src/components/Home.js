@@ -6,7 +6,6 @@ import {
   Button,
   useDisclosure,
   Select,
-  Flex,
   Spinner,
   ModalOverlay,
   Modal,
@@ -42,9 +41,13 @@ const HomePage = () => {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      await axios.post("http://localhost:8080/coustomer", customer, {
-        headers,
-      });
+      await axios.post(
+        "https://fantastic-hen-cloak.cyclic.app/coustomer",
+        customer,
+        {
+          headers,
+        }
+      );
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);
@@ -141,7 +144,6 @@ const HomePage = () => {
                             required
                           />
                         </FormControl>
-
                         <FormControl>
                           <FormLabel htmlFor="amount">Amount</FormLabel>
                           <Input
@@ -152,7 +154,6 @@ const HomePage = () => {
                             required
                           />
                         </FormControl>
-
                         <FormControl>
                           <FormLabel htmlFor="rate">Rate</FormLabel>
                           <Input

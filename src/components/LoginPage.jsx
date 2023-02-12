@@ -38,14 +38,17 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/login", input);
+      const res = await axios.post(
+        "https://fantastic-hen-cloak.cyclic.app/login",
+        input
+      );
       console.log(res.data.token);
       if(res.data.token)
       {
         localStorage.setItem("token", res.data.token);
         toast({
           title: 'LoggedIn Sucessfully.',
-          description: "We've created your account for you.",
+          description: "Welcome!!",
           status: 'success',
           duration: 4000,
           isClosable: true,

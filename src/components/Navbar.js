@@ -46,7 +46,7 @@ const Navbar = () => {
               id="search-button"
               // style={{ backgroundColor: "transparent" }}
             >
-              &#128269;Search
+              &#128269;
             </button>
           </Link>
         </form>

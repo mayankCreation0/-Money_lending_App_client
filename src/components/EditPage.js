@@ -13,7 +13,6 @@ import {
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
-import styled from "styled-components";
 
 const EditPage = () => {
   const toast = useToast();
@@ -38,7 +37,9 @@ const EditPage = () => {
       Authorization: `Bearer ${token}`,
     };
     axios
-      .get(`http://localhost:8080/coustomer/${id}`, { headers })
+      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`, {
+        headers,
+      })
       .then((response) => {
         setData(response.data);
         console.log(response.data);
@@ -58,9 +59,13 @@ const EditPage = () => {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      await axios.patch(`http://localhost:8080/coustomer/${id}`, formData, {
-        headers,
-      });
+      await axios.patch(
+        `https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`,
+        formData,
+        {
+          headers,
+        }
+      );
 
       setIsLoading(false);
       toast({
