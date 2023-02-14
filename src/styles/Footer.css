@@ -1,9 +1,10 @@
 footer {
   line-height: 1.5;
   font-family: "Poppins", sans-serif;
-  margin: 115px 0 0 0;
+  margin: 20px 0 0 0;
   padding: 0;
   box-sizing: border-box;
+  /* position: absolute; */
 }
 .container {
   max-width: 1170px;

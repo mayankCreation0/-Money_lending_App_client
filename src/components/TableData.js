@@ -1,10 +1,4 @@
 import {
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   Button,
   Spinner,
   useToast,
@@ -58,13 +52,13 @@ function TableData() {
         .then((response) => {
           setFilteredData(response.data);
           console.log(response.data)
-          console.log(currentPage)
+          // console.log(currentPage)
           setLoading(false);
         }).catch(err => {
           toast({
             title: "Something went wrong",
             description: "",
-            status: err,
+            status: "error",
             duration: 4000,
             isClosable: true,
           });
@@ -94,6 +88,7 @@ function TableData() {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
+    setLoading(true);
     axios
       .get(
         `https://fantastic-hen-cloak.cyclic.app/coustomer?category=${selectedFilter}&sortBy=date:${selectedOption}`,
@@ -101,9 +96,9 @@ function TableData() {
       )
       .then((response) => {
         // setSearchData(response.data);
-        setFilteredData(response.data);
+        setFilteredData(response.data.data);
         setLoading(false);
-        // console.log(response.data);
+        console.log('hlw', response.data.data);
       })
       .catch((error) => {
         toast({
@@ -113,22 +108,21 @@ function TableData() {
           duration: 4000,
           isClosable: true,
         });
-        console.log(error);
+        console.log("err", error);
         setLoading(false);
       });
   }
   useEffect(() => {
     fetchData();
-  }, [selectedFilter,selectedOption]);
+  }, [selectedFilter, selectedOption]);
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = filteredData.slice(firstPostIndex, lastPostIndex);
-
   function StatusCell({ status }) {
     switch (status) {
       case "Active":
         return (
-          <Td>
+          <td>
             <div
               style={{
                 backgroundColor: "#0EBD60",
@@ -140,11 +134,11 @@ function TableData() {
             >
               Running
             </div>
-          </Td>
+          </td>
         );
       case "Inactive":
         return (
-          <Td>
+          <td>
             <div
               style={{
                 backgroundColor: "#BA1B2A",
@@ -156,11 +150,11 @@ function TableData() {
             >
               Completed
             </div>
-          </Td>
+          </td>
         );
       case "Renew":
         return (
-          <Td>
+          <td>
             <div
               style={{
                 backgroundColor: "#2F3C7E",
@@ -173,10 +167,10 @@ function TableData() {
             >
               Renew
             </div>
-          </Td>
+          </td>
         );
       default:
-        return <Td>{status}</Td>;
+        return <td>{status}</td>;
     }
   }
   return (
@@ -231,7 +225,7 @@ function TableData() {
                   name="search"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  
+
                 />
                 <Link>
                   <button type="submit" id="search-button" value={searchTerm} onClick={handleSearchChange}>
@@ -264,38 +258,39 @@ function TableData() {
               </li>
             </ul>
           </div>
-          <Table
-            className="table-data"
-            css={{
-              backgroundColor: "#f2f2f2",
-              border: "1px solid #ccc",
-              fontSize: "14px",
-              color: "#333",
-              padding: "10px",
-            }}
-          >
-            <Thead>
-              <Tr>
-                <Th width="50px">uid</Th>
-                <Th width="150px">Name</Th>
-                <Th width="100px">Date</Th>
-                <Th width="120px">Category</Th>
-                <Th width="250px">Address</Th>
-                <Th width="80px">Status</Th>
-                <Th width="70px">Amount</Th>
-                <Th width="30px">Rate</Th>
-                <Th width="300px">
-                  Actions &nbsp;
-                    <div class="dropdown-container">
-                      <button class="dropdown-button">Filter & Sort</button>
-                      <div class="dropdown-content">
+            <div className="Tablecontainer">
+            <table
+                className="responsive-table"
+              // css={{
+              //   backgroundColor: "#f2f2f2",
+              //   border: "1px solid #ccc",
+              //   fontSize: "14px",
+              //   color: "#333",
+              //   padding: "10px",
+              // }}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">uid</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Rate</th>
+                  <th scope="col">
+                    Actions &nbsp;
+                    <div className="dropdown-Tablecontainer">
+                      <button className="dropdown-button">Filter & Sort</button>
+                      <div className="dropdown-content">
                         <input type="radio" id="asc" name="sort" value="asc" checked={selectedOption === "asc"}
                           onChange={handleOptionChange} />
                         <label for="asc">Ascending</label><br />
                         <input type="radio" id="desc" name="sort" value="desc" checked={selectedOption === "desc"}
                           onChange={handleOptionChange} />
                         <label for="desc">Descending</label><br />
-                        <hr style={{marginTop:'5px',border:'1px solid lightgrey '}}/>
+                        <hr style={{ marginTop: '5px', border: '1px solid ' }} />
                         <input type="checkbox" id="Gold" name="Gold" value="Gold" checked={selectedFilter.includes("Gold")}
                           onChange={handleFilterChange} />
                         <label for="Gold">Gold</label><br />
@@ -307,60 +302,60 @@ function TableData() {
                         <label for="Bronze">Bronze</label><br />
                       </div>
                     </div>
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {currentPosts.length > 0 ? currentPosts.map((row) => {
-                return (
-                  <Tr key={row._id}>
-                    <Td>{row._id}</Td>
-                    <Td>{row.Name}</Td>
-                    <Td>
-                      {/* Last updated Date:{" "} */}
-                      {new Date(row.updatedAt).toLocaleDateString("default", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </Td>
-                    <Td>{row.Category}</Td>
-                    <Td>{row.Address}</Td>
-                    <StatusCell status={row.Status} />
-                    <Td>{row.Amount}</Td>
-                    <Td>{row.Rate}</Td>
-                    <Td>
-                      <Link to={`/editpage/${row._id}`}>
-                        <Button
-                          color="green"
-                          bg="rgb(198, 191, 191)"
-                          mr={1}
-                          width="70px"
-                        >
-                          &#x270E;Edit
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentPosts.length > 0 ? currentPosts.map((row) => {
+                  return (
+                    <tr key={row._id}>
+                      <th>{row.Name}</th>
+                      <td data-title="Uid">{row._id}</td>
+                      <td data-title="Date">
+                        {new Date(row.date).toLocaleDateString("default", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td data-title="Category">{row.Category}</td>
+                      <td data-title="Address">{row.Address}</td>
+                      <StatusCell status={row.Status} />
+                      <td data-title="Amount">{row.Amount}</td>
+                      <td data-title="Rate">{row.Rate}</td>
+                      <td >
+                        <Link to={`/editpage/${row._id}`}>
+                          <Button
+                            color="green"
+                            bg="rgb(198, 191, 191)"
+                            mr={1}
+                            width="70px"
+                          >
+                            &#x270E;Edit
+                          </Button>
+                        </Link>
+                        <Link to={`/userdetails/${row._id}`}>
+                          <Button color="black" bg="blue" mr={1} width="70px">
+                            &#128065;View
+                          </Button>
+                        </Link>
+                        <Button variant="outline" bg="red.500" onClick={() => { deleteItem(row._id) }}>
+                          &#128465;Delete
                         </Button>
-                      </Link>
-                      <Link to={`/userdetails/${row._id}`}>
-                        <Button color="black" bg="blue" mr={1} width="70px">
-                          &#128065;View
-                        </Button>
-                      </Link>
-                      <Button variant="outline" bg="red.500" onClick={() => { deleteItem(row._id) }}>
-                        &#128465;Delete
-                      </Button>
-                    </Td>
-                  </Tr>
-                );
-              }) : toast({
-                title: "Something went wrong",
-                description: "No Data Found.",
-                status: "error",
-                duration: 4000,
-                isClosable: true,
-              })
-              }
-            </Tbody>
-          </Table>
+                      </td>
+                    </tr>
+                  );
+                }) : toast({
+                  title: "Something went wrong",
+                  description: "No Data Found.",
+                  status: "error",
+                  duration: 4000,
+                  isClosable: true,
+                })
+                }
+              </tbody>
+            </table>
+            </div>
           <Pagination
             totalPosts={filteredData.length}
             postsPerPage={postsPerPage}

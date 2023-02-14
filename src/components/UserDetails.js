@@ -1,13 +1,17 @@
-import {  Flex, Heading, Image, Spinner } from "@chakra-ui/react";
+import { Button, Flex, Heading, Image, Spinner } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Text, Stack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import moment from "moment/moment";
 
 function UserDetails() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [interest, setInterest] = useState(0);
+  const [duration, setDuration] = useState();
+  const [isShowingInterest, setIsShowingInterest] = useState(false);
   const { id } = useParams();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -16,19 +20,36 @@ function UserDetails() {
       Authorization: `Bearer ${token}`,
     };
     axios
-      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`, {
+      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`, {
         headers,
       })
       .then((response) => {
-        setData(response.data);
+        setData(response.data[0]);
         setLoading(false);
-        console.log(response.data);
+        console.log(response.data[0]);
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
-      });
+      }); 
   }, [id]);
+  
+  const calculateInterest = () => {
+    let loanDate = moment(data.date);
+    let currentDate = moment();
+    let duration = moment.duration(currentDate.diff(loanDate));
+    console.log("top",duration)
+    duration = duration.as("days")/30;
+    setDuration(duration);
+
+    const interestAmount = (data.Amount * data.Rate * duration) / 100;
+    setInterest(interestAmount);
+    setIsShowingInterest(!isShowingInterest)
+    console.log("duration: ", duration);
+    console.log("interest: ", interest);
+  }
+
+  console.log(data.date)
   function StatusCell({ status }) {
     switch (status) {
       case "Active":
@@ -177,7 +198,7 @@ function UserDetails() {
                   <Box width="30%">
                     <Text fontWeight="bold" fontSize="lg" color="#333">
                       Created Date:{" "}
-                      {new Date(data.createdAt).toLocaleDateString("default", {
+                      {new Date(data.date).toLocaleDateString("default", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
@@ -195,6 +216,16 @@ function UserDetails() {
                     </Text>
                   </Box>
                 </Flex>
+                  <Button onClick={calculateInterest}>
+                    Show Interest
+                  </Button>
+                  {isShowingInterest && (
+                    <Box mt={10}>
+                      <Text fontWeight="bold" fontSize="lg" color="#333">
+                        Interest: ₹{interest}
+                      </Text>
+                    </Box>
+                  )}
                 <Flex mt={10} justifyContent="space-between">
                   <Box width="30%">
                     <Text
