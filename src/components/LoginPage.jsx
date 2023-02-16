@@ -15,9 +15,11 @@ import "../styles/login.style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import  Cookies from 'universal-cookie';
 // import png from ' ../assets/Gmail_Logo_16px.png';
 
 const LoginPage = () => {
+  const cookies = new Cookies();
   const { authstate, fnauthstate, falseAuthState } = useContext(context);
   const [input, setInput] = useState({
     Username: "",
@@ -45,7 +47,11 @@ const LoginPage = () => {
       console.log(res.data.token);
       if(res.data.token)
       {
-        localStorage.setItem("token", res.data.token);
+        cookies.set('token', res.data.token, { path: '/' });
+
+        setTimeout(() => {
+          console.log(cookies.get('token'))
+        }, 1000);
         toast({
           title: 'LoggedIn Sucessfully.',
           description: "Welcome!!",
@@ -159,7 +165,7 @@ const LoginPage = () => {
                 LOGIN
               </button>
               <button class="gmail-button">
-                <i class="fa fa-google"></i>
+                {/* <i class="fa fa-google"></i> */}
                 Continue with Gmail
               </button>
             </form>

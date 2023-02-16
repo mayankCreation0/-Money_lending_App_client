@@ -24,20 +24,23 @@ import axios from "axios";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "../styles/home.css";
+import Cookies from "universal-cookie";
 // import bgimg from '../assets/bgimg.jpg'
 
 const HomePage = () => {
+  const cookies = new Cookies();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [customer, setCustomer] = useState({});
   const toast = useToast();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = cookies.get('token'); 
+      
+      console.log("token",token)
       const headers = {
         Authorization: `Bearer ${token}`,
       };
