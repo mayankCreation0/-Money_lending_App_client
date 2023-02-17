@@ -14,8 +14,10 @@ import { ReactComponent as Logo } from "../assets/logo.svg";
 import "../styles/navbar.css";
 import Navbar from "./Navbar";
 import { context } from "../AuthContext/context";
+import Cookies from "universal-cookie";
 
 function TableData() {
+  const cookies = new Cookies();
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -44,7 +46,7 @@ function TableData() {
   const handleSearchChange = (e) => {
     e.preventDefault();
     if (searchTerm) {
-      const token = localStorage.getItem("token");
+      const token = cookies.get('token');
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -70,7 +72,7 @@ function TableData() {
     }
   }
   function deleteItem(id) {
-    const token = localStorage.getItem("token");
+    const token = cookies.get('token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -85,7 +87,7 @@ function TableData() {
       });
   }
   const fetchData = () => {
-    const token = localStorage.getItem("token");
+    const token = cookies.get('token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
