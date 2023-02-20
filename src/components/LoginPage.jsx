@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { context } from "../AuthContext/context";
 import "../styles/login.style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -162,6 +162,9 @@ const LoginPage = () => {
                 <i class="fa fa-google"></i>
                 Continue with Gmail
               </button>
+                <Link to='/signup'><button style={{borderBottom:'1px solid blue',color:'blue',marginLeft:'20px'}} type="click">
+                  New User
+                </button></Link>
             </form>
           </Box>
         </>

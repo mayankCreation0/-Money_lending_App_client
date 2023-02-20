@@ -12,6 +12,8 @@ function UserDetails() {
   const [interest, setInterest] = useState(0);
   const [duration, setDuration] = useState();
   const [isShowingInterest, setIsShowingInterest] = useState(false);
+  const[month, setMonth] = useState(0);
+  const[days,setDays]=useState(0);
   const { id } = useParams();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,22 +33,29 @@ function UserDetails() {
       .catch((error) => {
         console.log(error);
         setLoading(false);
-      }); 
+      });
   }, [id]);
-  
+
   const calculateInterest = () => {
     let loanDate = moment(data.date);
     let currentDate = moment();
     let duration = moment.duration(currentDate.diff(loanDate));
-    console.log("top",duration)
-    duration = duration.as("days")/30;
+    setDays(Math.ceil(duration.as("days")));
+    console.log("top", duration)
+    duration = duration.as("days") / 30;
     setDuration(duration);
 
     const interestAmount = (data.Amount * data.Rate * duration) / 100;
-    setInterest(interestAmount);
+    setInterest(Math.ceil(interestAmount));
     setIsShowingInterest(!isShowingInterest)
     console.log("duration: ", duration);
     console.log("interest: ", interest);
+
+    const totalDays = Math.floor(duration);
+    setMonth(Math.ceil(totalDays / 30));
+    // setDays(totalDays % 30);
+
+    console.log(month + ' months and ' + days + ' days');
   }
 
   console.log(data.date)
@@ -216,16 +225,23 @@ function UserDetails() {
                     </Text>
                   </Box>
                 </Flex>
-                  <Button onClick={calculateInterest}>
-                    Show Interest
-                  </Button>
-                  {isShowingInterest && (
-                    <Box mt={10}>
-                      <Text fontWeight="bold" fontSize="lg" color="#333">
-                        Interest: ₹{interest}
-                      </Text>
-                    </Box>
-                  )}
+                <Button onClick={calculateInterest} bgColor='lightcyan'>
+                  Show Interest
+                </Button>
+                {isShowingInterest && (
+                  <div style={{ width: '100%', borderRadius:'10px', background: 'teal', display: 'flex', justifyContent: 'space-around' }}>
+                    {/* <Flex mt={10} justifyContent='space-around'> */}
+                    <Text fontWeight="bold" fontSize="lg" color="Yellow">
+                        Duration: {month} months  {days} days
+                    </Text>
+                    <Text fontWeight="bold" fontSize="lg" color="Yellow">
+                      Interest: ₹{interest}
+                    </Text>
+                    <Text fontWeight="bold" fontSize="lg" color="yellow">
+                      Final Amount: ₹{interest + data.Amount}
+                    </Text>
+                  </div>
+                )}
                 <Flex mt={10} justifyContent="space-between">
                   <Box width="30%">
                     <Text
@@ -244,7 +260,7 @@ function UserDetails() {
                   </Box>
                   <Box width="30%">
                     <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Rate: {data.Rate}
+                      Rate: {data.Rate}%
                     </Text>
                   </Box>
                 </Flex>

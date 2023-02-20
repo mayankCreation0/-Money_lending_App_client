@@ -4,7 +4,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/tableData.css";
 import Pagination from "./Pagination";
@@ -13,6 +13,7 @@ import { ReactComponent as MenuIcon } from "../assets/menu.svg";
 import { ReactComponent as Logo } from "../assets/logo.svg";
 import "../styles/navbar.css";
 import Navbar from "./Navbar";
+import { context } from "../AuthContext/context";
 
 function TableData() {
   const [click, setClick] = useState(false);
@@ -26,7 +27,7 @@ function TableData() {
   const [postsPerPage, setPostsPerPage] = useState(9);
   const [selectedOption, setSelectedOption] = useState("desc");
   const [selectedFilter, setSelectedFilter] = useState([]);
-
+  const {fnstore}=useContext(context)
   const toast = useToast();
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
@@ -97,6 +98,7 @@ function TableData() {
       .then((response) => {
         // setSearchData(response.data);
         setFilteredData(response.data.data);
+        fnstore(response.data.data)
         setLoading(false);
         console.log('hlw', response.data.data);
       })

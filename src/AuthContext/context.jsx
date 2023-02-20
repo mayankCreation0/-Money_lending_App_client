@@ -2,6 +2,10 @@ import React from "react";
 export const context = React.createContext();
 function Appcontext({ children }) {
   const [authstate, setAuthstate] = React.useState(false);
+  const [store,setStore] = React.useState([]);
+  const fnstore = (value)=>{
+    setStore(value)
+  }
   const fnauthstate = () => {
     setAuthstate(true);
   };
@@ -9,7 +13,7 @@ function Appcontext({ children }) {
     setAuthstate(false);
   }
   return (
-    <context.Provider value={{ authstate, fnauthstate, falseAuthState }}>
+    <context.Provider value={{ authstate, fnauthstate, falseAuthState,fnstore ,store}}>
       {children}
     </context.Provider>
   );

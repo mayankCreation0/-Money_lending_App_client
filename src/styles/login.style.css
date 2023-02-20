@@ -46,3 +46,20 @@
     margin-right: 10px;
     margin-bottom: -4px;
 }
+
+.already-button {
+  background-color: #fff;
+  color: blue;
+  border: 2px solid #333;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.already-button:hover {
+  background-color: #333;
+  color: #fff;
+  border-color: #fff;
+}

@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import HomePage from "../components/Home";
 import LoginPage from "../components/LoginPage";
 import Navbar from "../components/Navbar";
+import SignupPage from "../components/Signup";
 import TableData from "../components/TableData";
 import UserDetails from "../components/UserDetails";
 import PrivateRoute from "./PrivateRoute";
@@ -15,6 +16,7 @@ function AllRoutes() {
     <div>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route
           path="/home"
           element={
