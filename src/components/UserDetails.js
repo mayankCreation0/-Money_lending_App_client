@@ -5,8 +5,10 @@ import { useParams } from "react-router-dom";
 import { Box, Text, Stack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import moment from "moment/moment";
+import Cookies from 'universal-cookie'
 
 function UserDetails() {
+  const cookies = new Cookies();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [interest, setInterest] = useState(0);
@@ -16,7 +18,7 @@ function UserDetails() {
   const[days,setDays]=useState(0);
   const { id } = useParams();
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = cookies.get("token");
 
     const headers = {
       Authorization: `Bearer ${token}`,

@@ -17,3 +17,18 @@
 #content-inside{
   opacity: 1;
 }
+@media only screen and (max-width: 767px) {
+  .box {
+    flex-direction: column;
+    text-align: center;
+  }
+  .box__heading {
+    font-size: 1.5rem;
+  }
+  .box__text {
+    font-size: 1.2rem;
+  }
+  .box__flex {
+    flex-wrap: wrap;
+  }
+}

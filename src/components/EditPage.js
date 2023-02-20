@@ -13,8 +13,10 @@ import {
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
+import Cookies from 'universal-cookie'
 
 const EditPage = () => {
+  const cookies = new Cookies();
   const toast = useToast();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +33,7 @@ const EditPage = () => {
     Status: "",
   });
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
+    const token = cookies.get("token");
     const headers = {
       Authorization: `Bearer ${token}`,
     };
