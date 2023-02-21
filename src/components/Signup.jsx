@@ -49,7 +49,7 @@ const SignupPage = () => {
                     title: 'signup Sucessfully.',
                     description: "Welcome!!",
                     status: 'success',
-                    duration: 4000,
+                    duration: 2500,
                     isClosable: true,
                     onCloseComplete: () => {
                         navigate('/');

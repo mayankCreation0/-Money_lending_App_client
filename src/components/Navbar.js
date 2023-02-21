@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
+  function refreshPage() {
+    window.location.reload(false);
+  }
   const closeMobileMenu = () => setClick(false);
   return (
     <div className="header">
@@ -32,7 +35,7 @@ const Navbar = () => {
           </li>
           <li className="option mobile-option" onClick={closeMobileMenu}>
             <Link to="" className="sign-up">
-              Log out
+              <button onClick={refreshPage}>Logout</button>
             </Link>
           </li>
         </ul>
@@ -70,7 +73,7 @@ const Navbar = () => {
         </li>
         <li onClick={closeMobileMenu}>
           <Link to="" className="signup-btn">
-            Logout
+            <button onClick={refreshPage}>Logout</button>
           </Link>
         </li>
       </ul>
