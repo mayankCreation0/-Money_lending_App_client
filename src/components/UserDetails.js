@@ -19,7 +19,6 @@ function UserDetails() {
   const { id } = useParams();
   useEffect(() => {
     const token = cookies.get("token");
-
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -57,7 +56,7 @@ function UserDetails() {
 
     const totalDays = Math.floor(duration);
     setMonth(Math.ceil(totalDays / 30));
-    // setDays(totalDays % 30);
+    setDays(totalDays % 30);
 
     console.log(month + ' months and ' + days + ' days');
   }
