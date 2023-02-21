@@ -34,16 +34,17 @@ const EditPage = () => {
   });
   useEffect(() => {
     const token = cookies.get("token");
+    console.log(token)
     const headers = {
       Authorization: `Bearer ${token}`,
     };
     axios
-      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`, {
+      .get(`https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`, {
         headers,
       })
       .then((response) => {
-        setData(response.data);
-        console.log(response.data);
+        setData(response.data[0]);
+        console.log(response.data[0]);
       })
       .catch((error) => {
         console.log(error);
@@ -56,12 +57,13 @@ const EditPage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = cookies.get("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
+      console.log("edit",token)
       await axios.patch(
-        `https://fantastic-hen-cloak.cyclic.app/coustomer/${id}`,
+        `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
         formData,
         {
           headers,
@@ -81,7 +83,7 @@ const EditPage = () => {
       console.log(error);
       toast({
         title: "Something went wrong",
-        description: "We've created your account for you.",
+        description: "",
         status: "error",
         duration: 4000,
         isClosable: true,

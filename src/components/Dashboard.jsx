@@ -22,6 +22,7 @@ function Dashboard() {
 
   return (
     <div>
+    <p style={{font:'70px',fontWeight:'800'}}>Page is underConstruction</p>
       Dashboard: {store.length} ({MoMChange > 0 ? "+" : ""}
       {MoMChange} MoM)
     </div>

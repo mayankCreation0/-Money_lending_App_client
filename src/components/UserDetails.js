@@ -36,11 +36,13 @@ function UserDetails() {
         console.log(error);
         setLoading(false);
       });
-  }, [id]);
+  }, [id,cookies]);
 
   const calculateInterest = () => {
     let loanDate = moment(data.date);
+    console.log("loan",loanDate)
     let currentDate = moment();
+    console.log("curr",currentDate)
     let duration = moment.duration(currentDate.diff(loanDate));
     setDays(Math.ceil(duration.as("days")));
     console.log("top", duration)
