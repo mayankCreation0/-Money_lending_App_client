@@ -65,9 +65,9 @@ const Navbar = () => {
         <li className="sign-in" onClick={closeMobileMenu}>
           <Link to="#">
             <img
-              src="https://avatars.githubusercontent.com/u/111152286?v=4"
+              src="https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
               alt="img"
-              style={{ width: "50px", borderRadius: "50%" }}
+              style={{ width: "50px", borderRadius: "50%" ,backgroundColor:'lightcoral'}}
             />
           </Link>
         </li>
