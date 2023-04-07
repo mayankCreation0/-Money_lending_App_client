@@ -7,6 +7,7 @@ import {
     InputGroup,
     Heading,
     useToast,
+    Spinner,
 } from "@chakra-ui/react";
 import {  useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ const SignupPage = () => {
         Username: "",
         password: "",
     });
+    const [Loading ,setLoading] = useState(false)
     const toast = useToast();
     const [showPassword, setShowPassword] = useState(false);
     const handleChange = (e) => {
@@ -39,11 +41,13 @@ const SignupPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            setLoading(true)
             const res = await axios.post(
                 "https://fantastic-hen-cloak.cyclic.app/signup",
                 input
             );
             console.log(res.status);
+            setLoading(false);
             if (res.status === 201) {
                 toast({
                     title: 'signup Sucessfully.',
@@ -58,6 +62,7 @@ const SignupPage = () => {
                 // fnauthstate();
             }
             else if (res.status === 400) {
+                setLoading(false);
                 toast({
                     title: "User Already Registered",
                     description: "",
@@ -67,6 +72,7 @@ const SignupPage = () => {
                 });
             }
         } catch (e) {
+            setLoading(false);
             toast({
                 title: "Something went wrong",
                 description: "",
@@ -153,7 +159,13 @@ const SignupPage = () => {
                     </FormControl>
 
                     <button className="stylish-button" type="submit">
-                        signup
+                        signup{Loading ? <Spinner
+                            thickness="4px"
+                            speed="0.65s"
+                            emptyColor="gray.200"
+                            color="blue.500"
+                            size="md"
+                        /> : null}
                     </button>
                     <Link to='/'><button class="already-button">
                         Already have a account

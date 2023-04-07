@@ -7,6 +7,7 @@ import {
   InputGroup,
   Heading,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
@@ -20,6 +21,7 @@ import  Cookies from 'universal-cookie';
 
 const LoginPage = () => {
   const cookies = new Cookies();
+  const [Loading, setLoading] = useState(false);
   const { authstate, fnauthstate, falseAuthState } = useContext(context);
   const [input, setInput] = useState({
     Username: "",
@@ -40,11 +42,13 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      setLoading(true);
       const res = await axios.post(
         "https://fantastic-hen-cloak.cyclic.app/login",
         input
       );
       console.log(res.data.token);
+      setLoading(false);
       if(res.data.token)
       {
         cookies.set('token', res.data.token, { path: '/' });
@@ -62,6 +66,7 @@ const LoginPage = () => {
         fnauthstate();
       }
       else{
+        setLoading(false);
         toast({
           title: "Invalid credentials",
           description: "",
@@ -72,6 +77,7 @@ const LoginPage = () => {
         falseAuthState();
       }
     } catch (e) {
+      setLoading(false);
       toast({
         title: "Invalid credentials",
         description: "",
@@ -162,7 +168,13 @@ const LoginPage = () => {
               </FormControl>
 
               <button className="stylish-button" type="submit">
-                LOGIN
+                  LOGIN{Loading ? <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="md"
+                  /> : null}
               </button>
               <button class="gmail-button">
                 {/* <i class="fa fa-google"></i> */}

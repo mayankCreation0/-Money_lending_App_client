@@ -1,6 +1,5 @@
 import {
   Button,
-  Spinner,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -15,6 +14,7 @@ import "../styles/navbar.css";
 import Navbar from "./Navbar";
 import { context } from "../AuthContext/context";
 import Cookies from "universal-cookie";
+import MyLoader from "./Loader";
 
 
 function TableData() {
@@ -119,6 +119,7 @@ function TableData() {
   }
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter, selectedOption]);
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
@@ -183,15 +184,7 @@ function TableData() {
       {loading ? (
         <>
           <Navbar />
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-            justifyContent="center"
-            marginTop='20%'
-          />
+          <MyLoader/>
         </>
       ) : (
         <>
@@ -250,7 +243,7 @@ function TableData() {
               <li className="sign-in" onClick={closeMobileMenu}>
                 <Link to="#">
                   <img
-                    src="https://avatars.githubusercontent.com/u/111152286?v=4"
+                      src="https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
                     alt="img"
                     style={{ width: "50px", borderRadius: "50%" }}
                   />

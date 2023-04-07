@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Image, Spinner } from "@chakra-ui/react";
+import { Button, Flex, Heading, Image } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,8 +6,10 @@ import { Box, Text, Stack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import moment from "moment/moment";
 import Cookies from 'universal-cookie'
+import MyLoader from "./Loader";
 
 function UserDetails() {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookies = new Cookies();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -161,15 +163,7 @@ function UserDetails() {
   return (
     <>
       {loading ? (
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          top="50%"
-          justifyContent="center"
-        />
+        <MyLoader/>
       ) : (
         <Box
           backgroundImage={`url(https://source.unsplash.com/featured/?${data.Category})`}

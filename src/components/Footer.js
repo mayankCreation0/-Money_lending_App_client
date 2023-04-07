@@ -54,14 +54,7 @@ const Footer = () => {
           gap: "10px",
         }}
       >
-        Made with
-        <img
-          src="https://spng.pngfind.com/pngs/s/8-84923_large-red-heart-png-clipart-love-heart-transparent.png"
-          alt="img"
-          width="15px"
-          style={{ background: "transparent" }}
-        />
-        by MayankCreation
+        Made with 💖 by MayankCreation
       </div>
     </footer>
   );
