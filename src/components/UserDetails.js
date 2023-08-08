@@ -9,7 +9,6 @@ import Cookies from 'universal-cookie'
 import MyLoader from "./Loader";
 
 function UserDetails() {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookies = new Cookies();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -37,31 +36,33 @@ function UserDetails() {
         console.log(error);
         setLoading(false);
       });
-  }, [id,cookies]);
+  }, []);
 
   const calculateInterest = () => {
     let loanDate = moment(data.date);
-    console.log("loan",loanDate)
     let currentDate = moment();
-    console.log("curr",currentDate)
     let duration = moment.duration(currentDate.diff(loanDate));
-    setDays(Math.ceil(duration.as("days")));
-    console.log("top", duration)
-    duration = duration.as("days") / 30;
-    setDuration(duration);
+    let totalDays = Math.ceil(duration.as("days"));
 
-    const interestAmount = (data.Amount * data.Rate * duration) / 100;
-    setInterest(Math.ceil(interestAmount));
-    setIsShowingInterest(!isShowingInterest)
-    console.log("duration: ", duration);
-    console.log("interest: ", interest);
+    // Calculate per-day interest rate
+    let perDayInterestRate = data.Rate / 30 / 100;
 
-    const totalDays = Math.floor(duration);
-    setMonth(Math.ceil(totalDays / 30));
-    setDays(totalDays % 30);
+    // Calculate total interest
+    let totalInterest = data.Amount * perDayInterestRate * totalDays;
 
-    console.log(month + ' months and ' + days + ' days');
+    setDays(totalDays);
+    setInterest(Math.ceil(totalInterest));
+    setIsShowingInterest(true);
+
+    // Calculate months and remaining days
+    let months = Math.floor(totalDays / 30);
+    let remainingDays = totalDays % 30;
+    setMonth(months);
+    setDays(remainingDays);
+
+    console.log(months + ' months and ' + remainingDays + ' days');
   }
+
 
   console.log(data.date)
   function StatusCell({ status }) {

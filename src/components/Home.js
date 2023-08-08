@@ -38,9 +38,9 @@ const HomePage = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const token = cookies.get('token'); 
-      
-      console.log("token",token)
+      const token = cookies.get('token');
+
+      console.log("token", token)
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -175,7 +175,7 @@ const HomePage = () => {
                             type="text"
                             placeholder="enter weight/pcs of product"
                             onChange={handleChange}
-                            required
+                            // required
                           />
                         </FormControl>
 
@@ -191,8 +191,9 @@ const HomePage = () => {
                             <option value="Gold">Gold</option>
                             <option value="Silver">Silver</option>
                             <option value="Bronze">Bronze</option>
-                            <option value="Bronze">Bronze</option>
-                            <option value="Others">Others</option>
+                            <option value="Bike">bike</option>
+                            <option value="Cycle">cycle</option>
+                            <option value="Others">others</option>
                           </Select>
                         </FormControl>
                         <FormControl>
@@ -232,7 +233,7 @@ const HomePage = () => {
                             type="number"
                             placeholder="enter phone number"
                             onChange={handleChange}
-                            // required
+                          // required
                           />
                         </FormControl>
 
@@ -244,7 +245,7 @@ const HomePage = () => {
                             type="text"
                             placeholder="Enter Remarks"
                             onChange={handleChange}
-                            // required
+                          // required
                           />
                         </FormControl>
 

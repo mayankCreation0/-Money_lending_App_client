@@ -49,61 +49,108 @@ const EditPage = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [id]);
+  }, []);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // const handleEdit = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   try {
+  //     const token = cookies.get("token");
+  //     const headers = {
+  //       Authorization: `Bearer ${token}`,
+  //     };
+  //     console.log("edit",token)
+  //     await axios.patch(
+  //       `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
+  //       formData,
+  //       {
+  //         headers,
+  //       }
+  //     );
+
+  //     setIsLoading(false);
+  //     toast({
+  //       title: "Update the Changes",
+  //       description: "All the Change is updated in Database",
+  //       status: "success",
+  //       duration: 4000,
+  //       isClosable: true,
+  //     });
+  //     console.log(formData);
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast({
+  //       title: "Something went wrong",
+  //       description: "",
+  //       status: "error",
+  //       duration: 4000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
   const handleEdit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
       const token = cookies.get("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      console.log("edit",token)
-      await axios.patch(
-        `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
-        formData,
-        {
-          headers,
-        }
+
+      // Identify the changed fields
+      const changedFields = Object.keys(formData).filter(
+        (key) => formData[key] !== data[key]
       );
 
-      setIsLoading(false);
-      toast({
-        title: "Update the Changes",
-        description: "All the Change is updated in Database",
-        status: "success",
-        duration: 4000,
-        isClosable: true,
-      });
-      console.log(formData);
+      if (changedFields.length > 0) {
+        // Create a new object with only the changed fields
+        const updatedData = {};
+        changedFields.forEach((field) => {
+          updatedData[field] = formData[field];
+        });
+
+        await axios.patch(
+          `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
+          updatedData,
+          {
+            headers,
+          }
+        );
+
+        setIsLoading(false);
+        toast({
+          title: "Update the Changes",
+          description: "All the Changes are updated in the Database",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      } else {
+        setIsLoading(false);
+        toast({
+          title: "No changes detected",
+          description: "No changes were made to the data.",
+          status: "info",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       toast({
         title: "Something went wrong",
-        description: "",
+        description: "There was an error while updating the data.",
         status: "error",
         duration: 4000,
         isClosable: true,
       });
     }
   };
-  //   const EditForm = styled(Box)`
-  //     background-color: #f8f8f8;
-  //     p {
-  //       color: #333;
-  //     }
-  //     input {
-  //       background-color: #fff;
-  //       border: 1px solid #333;
-  //       &:focus {
-  //         outline: none;
-  //         box-shadow: 0 0 10px #333;
-  //       }
-  //     }
-  //   `;
+
   return (
     <Box
       p={6}
@@ -189,8 +236,9 @@ const EditPage = () => {
                 <option value="Gold">Gold</option>
                 <option value="Silver">Silver</option>
                 <option value="Bronze">Bronze</option>
-                <option value="Bronze">Bronze</option>
-                <option value="Others">Others</option>
+                <option value="Bike">bike</option>
+                <option value="Cycle">cycle</option>
+                <option value="Others">others</option>
               </Select>
             </FormControl>
             <FormControl mt={4}>
@@ -202,7 +250,7 @@ const EditPage = () => {
                 defaultValue={data.Weight}
                 border="2px solid black"
                 onChange={handleChange}
-                required
+                // required
               />
             </FormControl>
             <FormControl mt={4}>
@@ -280,7 +328,7 @@ const EditPage = () => {
                 )}
               </Button>
               <Link to={`/userdetails/${data._id}`}>
-                <Button>view Changes</Button>
+                <Button style={{border:'1px solid black'}}>view Changes</Button>
               </Link>
             </Box>
           </Flex>
