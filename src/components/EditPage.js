@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -21,20 +21,11 @@ const EditPage = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
-  const [formData, setFormData] = useState({
-    Name: "",
-    Address: "",
-    PhoneNumber: "",
-    Gender: "",
-    Category: "",
-    Weight: "",
-    Rate: "",
-    Remarks: "",
-    Status: "",
-  });
+  const [formData, setFormData] = useState({});
+  const [loanDate, setLoanDate] = useState();
+
   useEffect(() => {
     const token = cookies.get("token");
-    console.log(token)
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -44,52 +35,23 @@ const EditPage = () => {
       })
       .then((response) => {
         setData(response.data[0]);
-        console.log(response.data[0]);
+        setFormData(response.data[0]);
+        const isoDate = new Date(response.data[0].date); // Convert the ISO 8601 date to a Date object
+        setLoanDate(isoDate.toISOString().split('T')[0]); // Extract the date portion
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  // const handleEdit = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   try {
-  //     const token = cookies.get("token");
-  //     const headers = {
-  //       Authorization: `Bearer ${token}`,
-  //     };
-  //     console.log("edit",token)
-  //     await axios.patch(
-  //       `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
-  //       formData,
-  //       {
-  //         headers,
-  //       }
-  //     );
 
-  //     setIsLoading(false);
-  //     toast({
-  //       title: "Update the Changes",
-  //       description: "All the Change is updated in Database",
-  //       status: "success",
-  //       duration: 4000,
-  //       isClosable: true,
-  //     });
-  //     console.log(formData);
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast({
-  //       title: "Something went wrong",
-  //       description: "",
-  //       status: "error",
-  //       duration: 4000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const handleEdit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -100,44 +62,22 @@ const EditPage = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      // Identify the changed fields
-      const changedFields = Object.keys(formData).filter(
-        (key) => formData[key] !== data[key]
+      await axios.patch(
+        `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
+        formData,
+        {
+          headers,
+        }
       );
 
-      if (changedFields.length > 0) {
-        // Create a new object with only the changed fields
-        const updatedData = {};
-        changedFields.forEach((field) => {
-          updatedData[field] = formData[field];
-        });
-
-        await axios.patch(
-          `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
-          updatedData,
-          {
-            headers,
-          }
-        );
-
-        setIsLoading(false);
-        toast({
-          title: "Update the Changes",
-          description: "All the Changes are updated in the Database",
-          status: "success",
-          duration: 4000,
-          isClosable: true,
-        });
-      } else {
-        setIsLoading(false);
-        toast({
-          title: "No changes detected",
-          description: "No changes were made to the data.",
-          status: "info",
-          duration: 4000,
-          isClosable: true,
-        });
-      }
+      setIsLoading(false);
+      toast({
+        title: "Update the Changes",
+        description: "All the Changes are updated in the Database",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -150,7 +90,6 @@ const EditPage = () => {
       });
     }
   };
-
   return (
     <Box
       p={6}
@@ -176,7 +115,7 @@ const EditPage = () => {
                 type="text"
                 id="Name"
                 name="Name"
-                defaultValue={data.Name}
+                value={data.Name || ''}
                 border="2px solid black"
                 onChange={handleChange}
                 required
@@ -213,7 +152,7 @@ const EditPage = () => {
                 name="Gender"
                 onChange={handleChange}
                 placeholder="Select Gender"
-                defaultValue={data.Gender}
+                value={formData.Gender || ''}
                 border="2px solid black"
                 required
               >
@@ -229,7 +168,7 @@ const EditPage = () => {
                 name="Category"
                 onChange={handleChange}
                 placeholder="Select Category"
-                defaultValue={data.Category}
+                value={formData.Category || ''}
                 border="2px solid black"
                 required
               >
@@ -296,7 +235,7 @@ const EditPage = () => {
                 name="Status"
                 onChange={handleChange}
                 placeholder="Select Status"
-                defaultValue={data.Status}
+                value={formData.Status || ''}
                 border="2px solid black"
                 required
               >
@@ -313,12 +252,13 @@ const EditPage = () => {
                 name="date"
                 type="date"
                 placeholder="Select date"
-                onChange={handleChange}
-                defaultValue={data.date}
+                value={loanDate || ''}
                 border="2px solid black"
+                onChange={handleChange}
                 required
               />
             </FormControl>
+
             <Box mt={6} textAlign="center">
               <Button variantColor="blue" mr={3} onClick={handleEdit} bg="plum">
                 {isLoading ? (
