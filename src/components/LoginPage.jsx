@@ -3,7 +3,7 @@ import {
   FormLabel,
   Input,
   Box,
-  InputRightAddon,
+  InputRightElement,
   InputGroup,
   Heading,
   useToast,
@@ -95,14 +95,15 @@ const LoginPage = () => {
       ) : (
         <>
           <Box
-            w="100vw"
-            h="100vh"
-            backgroundImage="linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1)"
-            backgroundSize="cover"
-            backgroundPosition="center"
-            alignItems="center"
-            justifyContent="center"
-            display="flex"
+              w="100vw"
+              h="100vh"
+              backgroundImage="url('https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"
+              backgroundSize="cover"
+              backgroundPosition="center"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              backdropFilter="blur(8px)" // Add this line for blur effect
           >
             <form
               onSubmit={handleSubmit}
@@ -123,7 +124,7 @@ const LoginPage = () => {
                 fontSize="4xl"
                 fontWeight="medium"
               >
-                WELCOME
+                WELCOME BACK!!
               </Heading>
               <FormControl>
                 <FormLabel htmlFor="String">Username</FormLabel>
@@ -136,36 +137,32 @@ const LoginPage = () => {
                   ref={inputRef}
                   onChange={handleChange}
                   placeholder="Enter your email address"
+                  required
                 />
               </FormControl>
 
-              <FormControl mt={4}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    bg="white"
-                    // ref={inputRef}
-                    border="1px solid black"
-                    placeholder="Enter your password"
-                    onChange={handleChange}
-                  />
-                  <InputRightAddon
-                    onClick={() => setShowPassword(!showPassword)}
-                    cursor="pointer"
-                  >
-                    <FontAwesomeIcon
-                      icon={showPassword ? faEye : faEyeSlash}
-                      cursor="pointer"
+                <FormControl>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
                       border="1px solid black"
-                      onClick={() => setShowPassword(!showPassword)}
-                      size="lg"
+                      bg="white"
+                      value={input.password}
+                      onChange={handleChange}
+                      placeholder="Enter your password"
+                      required
                     />
-                  </InputRightAddon>
-                </InputGroup>
-              </FormControl>
+                    <InputRightElement width="3rem">
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        onClick={() => setShowPassword(!showPassword)}
+                        cursor="pointer"
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
 
               <button className="stylish-button" type="submit">
                   LOGIN{Loading ? <Spinner
@@ -174,11 +171,8 @@ const LoginPage = () => {
                     emptyColor="gray.200"
                     color="blue.500"
                     size="md"
+                    mb={-1}
                   /> : null}
-              </button>
-              <button class="gmail-button">
-                {/* <i class="fa fa-google"></i> */}
-                Continue with Gmail
               </button>
                 <Link to='/signup'><button style={{borderBottom:'1px solid blue',color:'blue',marginLeft:'20px'}} type="click">
                   New User
