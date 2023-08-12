@@ -32,7 +32,7 @@ const HomePage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [customer, setCustomer] = useState({});
+  const [Coustomer, setCoustomer] = useState({});
   const toast = useToast();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ const HomePage = () => {
       };
       await axios.post(
         "https://fantastic-hen-cloak.cyclic.app/coustomer",
-        customer,
+        Coustomer,
         {
           headers,
         }
@@ -71,7 +71,7 @@ const HomePage = () => {
   };
 
   const handleChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
+    setCoustomer({ ...Coustomer, [e.target.name]: e.target.value });
   };
 
   return (
@@ -103,11 +103,11 @@ const HomePage = () => {
             </Box>
 
             <Box>
-              <Button onClick={onOpen} id="newbtn">Register New Customer</Button>
+              <Button onClick={onOpen} id="newbtn">Register New Coustomer</Button>
               <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay>
                   <ModalContent>
-                    <ModalHeader>Add new Customer</ModalHeader>
+                    <ModalHeader>Add new Coustomer</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                       <form onSubmit={handleSubmit}>
@@ -260,7 +260,7 @@ const HomePage = () => {
                             {isLoading ? (
                               <Spinner size="sm" color="white" />
                             ) : (
-                              "Add Customer"
+                              "Add Coustomer"
                             )}
                           </Button>
                           <Button variant="ghost" onClick={onClose}>
