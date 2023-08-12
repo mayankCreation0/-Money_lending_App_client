@@ -62,6 +62,18 @@ const EditPage = () => {
         Authorization: `Bearer ${token}`,
       };
 
+      // Create a new entry in previousPayments array if status is Renew
+      if (formData.Status === "Renew") {
+        formData.previousPayments.push({
+          amount: formData.renewalAmount,
+          date: formData.renewalDate,
+        });
+      }
+
+      // Remove renewalAmount and renewalDate from formData
+      delete formData.renewalAmount;
+      delete formData.renewalDate;
+
       await axios.patch(
         `https://fantastic-hen-cloak.cyclic.app/coustomer/find/${id}`,
         formData,
@@ -90,6 +102,7 @@ const EditPage = () => {
       });
     }
   };
+
   return (
     <Box
       p={6}
@@ -240,11 +253,66 @@ const EditPage = () => {
                 required
               >
                 <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="Completed">Completed</option>
                 <option value="Renew">Renew</option>
               </Select>
             </FormControl>
-
+            {formData.Status === "Completed" && (
+              <>
+                <FormControl mt={4}>
+                  <FormLabel htmlFor="paymentAmount">Amount Paid</FormLabel>
+                  <Input
+                    type="number"
+                    id="paymentAmount"
+                    name="paymentAmount"
+                    value={formData.paymentAmount || ''}
+                    onChange={handleChange}
+                    border="2px solid black"
+                    required
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel htmlFor="paymentDate">Payment Date</FormLabel>
+                  <Input
+                    type="date"
+                    id="paymentDate"
+                    name="paymentDate"
+                    value={formData.paymentDate || ''}
+                    onChange={handleChange}
+                    border="2px solid black"
+                    required
+                  />
+                </FormControl>
+              </>
+            )}
+            {formData.Status === "Renew" && (
+              <>
+                <FormControl mt={4}>
+                  <FormLabel htmlFor="renewalAmount">Amount Paid</FormLabel>
+                  <Input
+                    type="number"
+                    id="renewalAmount"
+                    name="renewalAmount"
+                    value={formData.renewalAmount || ''}
+                    onChange={handleChange}
+                    border="2px solid black"
+                    required
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel htmlFor="renewalDate">Paid Date</FormLabel>
+                  <Input
+                    type="date"
+                    id="renewalDate"
+                    name="renewalDate"
+                    value={formData.renewalDate || ''}
+                    onChange={handleChange}
+                    border="2px solid black"
+                    required
+                  />
+                </FormControl>
+              </>
+            )}
             <FormControl>
               <FormLabel htmlFor="date">Date</FormLabel>
               <Input
@@ -274,6 +342,7 @@ const EditPage = () => {
           </Flex>
         </form>
       </Box>
+      
     </Box>
   );
 };

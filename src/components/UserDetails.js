@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Button, Divider, Flex, Heading, Image } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,10 +13,10 @@ function UserDetails() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [interest, setInterest] = useState(0);
-  const [duration, setDuration] = useState();
   const [isShowingInterest, setIsShowingInterest] = useState(false);
-  const[month, setMonth] = useState(0);
-  const[days,setDays]=useState(0);
+  const [month, setMonth] = useState(0);
+  const [year, setYear] = useState(0);
+  const [days, setDays] = useState(0);
   const { id } = useParams();
   useEffect(() => {
     const token = cookies.get("token");
@@ -30,7 +30,7 @@ function UserDetails() {
       .then((response) => {
         setData(response.data[0]);
         setLoading(false);
-        console.log(response.data[0]);
+        console.log("data",response.data[0]);
       })
       .catch((error) => {
         console.log(error);
@@ -39,8 +39,17 @@ function UserDetails() {
   }, []);
 
   const calculateInterest = () => {
+    if (isShowingInterest) {
+      setIsShowingInterest(false);
+      setYear(0);
+      setMonth(0);
+      setDays(0);
+      setInterest(0);
+      return;
+    }
+
     let loanDate = moment(data.date);
-    let currentDate = moment();
+    let currentDate = data.Status === "Completed" ? moment(data.paymentDate) : moment();
     let duration = moment.duration(currentDate.diff(loanDate));
     let totalDays = Math.ceil(duration.as("days"));
 
@@ -54,283 +63,260 @@ function UserDetails() {
     setInterest(Math.ceil(totalInterest));
     setIsShowingInterest(true);
 
-    // Calculate months and remaining days
+    // Calculate years, months, and remaining days
+    let years = Math.floor(totalDays / 365);
+    totalDays -= years * 365;
     let months = Math.floor(totalDays / 30);
     let remainingDays = totalDays % 30;
+
+    setYear(years);
     setMonth(months);
     setDays(remainingDays);
 
-    console.log(months + ' months and ' + remainingDays + ' days');
-  }
+    // console.log(years + ' years, ' + months + ' months, and ' + remainingDays + ' days');
+  };
 
 
-  console.log(data.date)
-  function StatusCell({ status }) {
-    switch (status) {
-      case "Active":
-        return (
-          <div
-            style={{
-              backgroundColor: "#00b894",
-              color: "white",
-              padding: "5px 10px",
-              borderRadius: "5px",
-              textTransform: "uppercase",
-              fontWeight: "bold",
-              letterSpacing: "1px",
-            }}
-          >
-            Running
-          </div>
-        );
-      case "Inactive":
-        return (
-          <div
-            style={{
-              backgroundColor: "#BA1B2A",
-              color: "white",
-              padding: "5px 10px",
-              borderRadius: "5px",
-              textTransform: "uppercase",
-              fontWeight: "bold",
-              letterSpacing: "1px",
-            }}
-          >
-            Completed
-          </div>
-        );
-      case "Renew":
-        return (
-          <div
-            style={{
-              backgroundColor: "#2F3C7E",
-              color: "white",
-              padding: "5px 10px",
-              borderRadius: "5px",
-              textTransform: "uppercase",
-              fontWeight: "bold",
-              letterSpacing: "1px",
-            }}
-          >
-            Renew & Running
-          </div>
-        );
-      default:
-        return <div>{status}</div>;
-    }
-  }
-  function Gendercheck({ gender }) {
-    switch (gender) {
-      case "Male":
-        return (
-          <Image
-            src={
-              "https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
-            }
-            width="200px"
-            mb={5}
-            borderRadius="full"
-            border="1px solid teal"
-          />
-        );
-      case "Female":
-        return (
-          <Image
-            src={
-              "https://static.vecteezy.com/system/resources/previews/004/773/704/original/a-girl-s-face-with-a-beautiful-smile-a-female-avatar-for-a-website-and-social-network-vector.jpg"
-            }
-            width="200px"
-            mb={5}
-            borderRadius="full"
-            border="1px solid teal"
-          />
-        );
-      case "Others":
-        return (
-          <Image
-            src={
-              "https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
-            }
-            width="200px"
-            mb={5}
-            borderRadius="full"
-            border="1px solid teal"
-          />
-        );
-      default:
-        return <div>{data.gender}</div>;
-    }
-  }
+
+
+  // console.log(data.date)
   return (
     <>
       {loading ? (
-        <MyLoader/>
+        <MyLoader />
       ) : (
-        <Box
-          backgroundImage={`url(https://source.unsplash.com/featured/?${data.Category})`}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          // height="100vh"
-          style={{ backgroundSize: "cover" }}
-        >
           <Box
-            width="70%"
-            p={10}
-            background="linear-gradient(to bottom, #e6e9f0, #eef1f5)"
-            overflow="hidden"
-            borderRadius="lg"
-            boxShadow="md"
             display="flex"
             flexDirection="column"
-            cursor="pointer"
-            // alignItems="center"
-            justifyContent="space-around"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="88.5vh"
+            bg="gray.100"
+            backgroundImage={`url(https://source.unsplash.com/featured/?${data.Category})`}
+            style={{ backgroundSize: "cover" }}
           >
-            <Stack spacing={1}>
-              <div style={{ margin: "auto" }}>
-                {<Gendercheck gender={data.Gender} />}
-              </div>
-              <div>
-                <Heading textAlign="center">{data.Name}</Heading>
-                <Text fontWeight="bold" fontSize="lg" textAlign="center">
-                  ID: {data._id}
-                </Text>
-                <Flex mt={10} justifyContent="space-between">
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      {<StatusCell status={data.Status} />}
-                    </Text>
-                  </Box>
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Created Date:{" "}
-                      {new Date(data.date).toLocaleDateString("default", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </Text>
-                  </Box>
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Last updated Date:{" "}
-                      {new Date(data.updatedAt).toLocaleDateString("default", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </Text>
-                  </Box>
+            <Box
+              width="80%"
+              p={1}
+              bg="white"
+              borderRadius="lg"
+              boxShadow="lg"
+              display="flex"
+              flexDirection={{ base: "column", md: "row" }}
+              alignItems="stretch"
+              justifyContent="space-between"
+            >
+              <Box flex="1" p={2} bg="gray.200">
+                <Flex direction="column" alignItems="center">
+                  <Image
+                    src={
+                      data.Gender === "Male"
+                        ? "https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
+                        : data.Gender === "Female"
+                          ? "https://static.vecteezy.com/system/resources/previews/004/773/704/original/a-girl-s-face-with-a-beautiful-smile-a-female-avatar-for-a-website-and-social-network-vector.jpg"
+                          : "https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
+                    }
+                    width="150px"
+                    height="150px"
+                    mb={1}
+                    borderRadius="full"
+                    border="2px solid teal"
+                  />
+                  <Heading textAlign="center" color="teal.500" mb={1}>
+                    {data.Name}
+                  </Heading>
+                  <Text
+                    fontWeight="bold"
+                    fontSize="lg"
+                    textAlign="center"
+                    color="gray.600"
+                  >
+                    ID: {data._id}
+                  </Text>
                 </Flex>
-                <Button onClick={calculateInterest} bgColor='lightcyan'>
-                  Show Interest
-                </Button>
-                {isShowingInterest && (
-                  <div style={{ width: '100%', borderRadius:'10px', background: 'teal', display: 'flex', justifyContent: 'space-around' }}>
-                    {/* <Flex mt={10} justifyContent='space-around'> */}
-                    <Text fontWeight="bold" fontSize="lg" color="Yellow">
-                        Duration: {month} months  {days} days
-                    </Text>
-                    <Text fontWeight="bold" fontSize="lg" color="Yellow">
-                      Interest: ₹{interest}
-                    </Text>
-                    <Text fontWeight="bold" fontSize="lg" color="yellow">
-                      Final Amount: ₹{interest + data.Amount}
-                    </Text>
-                  </div>
-                )}
-                <Flex mt={10} justifyContent="space-between">
-                  <Box width="30%">
+                <Stack spacing={1} mt={2}>
+                  <Flex justify="space-between" color="black" alignItems="center">
+                    <Text color="black">Status:</Text>
                     <Text
                       fontWeight="bold"
-                      fontSize="lg"
-                      color="#333"
-                      letterSpacing={1}
+                      borderRadius="md"
+                      px={1}
+                      py={1}
+                      color="white"
+                      bg={
+                        data.Status === "Active"
+                          ? "green.500"
+                          : data.Status === "Completed"
+                            ? "red.500"
+                            : "blue.500"
+                      }
                     >
-                      Amount: ₹{data.Amount}
+                      {data.Status}
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" color="black">
+                    <Text color="black">Last Updated:</Text>
+                    <Text color="black">{moment(data.updatedAt).format("MMMM D, YYYY")}</Text>
+                  </Flex>
+                  <Flex justify="space-between" color="black">
+                    <Text color="black" fontWeight="bold">Loan Date:</Text>
+                    <Text color="black" fontWeight="bold">{moment(data.date).format("MMMM D, YYYY")}</Text>
+                  </Flex>
+                  {data.Status === "Completed" && (
+                    <>
+                      <Flex justify="space-between" color="black">
+                        <Text color="black" fontWeight="bold">Amount Paid:</Text>
+                        <Text color="black" fontWeight="bold">₹{data.paymentAmount}</Text>
+                      </Flex>
+                      <Flex justify="space-between" color="black">
+                        <Text color="black" fontWeight="bold">Payment Date:</Text>
+                        <Text color="black" fontWeight="bold">{moment(data.paymentDate).format("MMMM D, YYYY")}</Text>
+                      </Flex>
+                    </>
+                  )}
+                </Stack>
+                <Button
+                  mt="3"
+                  w="100%"
+                  colorScheme="teal"
+                  fontWeight="bold"
+                  onClick={calculateInterest}
+                  _hover={{ bg: "teal.600" }}
+                  transition="background-color 0.3s ease"
+                  _focus={{ outline: "none" }}
+                >
+                  {isShowingInterest ? "Hide Total Amount" : "Show Total Amount"}
+                </Button>
+                {isShowingInterest && (
+                  <Box
+                    mt="3"
+                    p="2"
+                    bg="teal.600"
+                    borderRadius="md"
+                    color="white"
+                    _hover={{ bg: "teal.700" }}
+                    transition="background-color 0.3s ease"
+                  >
+                    <Text fontWeight="bold" color="gold">
+                      Duration: {year} years {month} months {days} days
+                    </Text>
+                    <Text fontWeight="bold" color="gold">
+                      Interest: ₹{interest}
+                    </Text>
+                    <Text fontWeight="bold" color="gold">
+                      Final Amount: ₹{interest + data.Amount}
                     </Text>
                   </Box>
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Weight: {data.Weight}
+                )}
+                {data.Status === "Renew" && (
+                  <Box mt={6} bg="gray.200" w="100%" p={4} borderRadius="md" boxShadow="md" maxHeight="150px" overflowY="auto">
+                    <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                      Previous Payments
                     </Text>
+                    <Divider mt={0} mb={4} />
+                    {data.previousPayments.map((payment, index) => (
+                      <Flex key={index} justify="space-between">
+                        <Text color="gray.600">Payment {index + 1}:</Text>
+                        <Text fontWeight="bold" color="gray.800">
+                          Amount: ₹{payment.amount}, Date: {moment(payment.date).format("MMMM D, YYYY")}
+                        </Text>
+                      </Flex>
+                    ))}
                   </Box>
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Rate: {data.Rate}%
-                    </Text>
-                  </Box>
-                </Flex>
-                <Flex mt={10} justifyContent="space-between">
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Category: {data.Category}
-                    </Text>
-                  </Box>
-                  <Box width="30%">
-                    <Text fontWeight="bold" fontSize="lg" color="#333">
-                      Remarks: {data.Remarks}
-                    </Text>
-                  </Box>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text fontWeight="bold" fontSize="lg" mt={10} color="#333">
-                    Address: {data.Address}
+                )}
+              </Box>
+              <Box flex="1" p={2}>
+              <Flex direction="column">
+                <Box bg="gray.200" p={4} borderRadius="md" boxShadow="md">
+                  <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                    Product Details
                   </Text>
-                  <Text fontWeight="bold" fontSize="lg" mt={10} color="#333">
-                    Phone Number: {data.PhoneNumber}
+                  <Divider mt={2} mb={4} />
+                  <Flex justify="space-between">
+                    <Text color="gray.600">Amount:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      ₹{data.Amount}
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" mt={2}>
+                    <Text color="gray.600">Weight:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.Weight}gms
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" mt={2}>
+                    <Text color="gray.600">Rate:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.Rate}%
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" mt={2}>
+                    <Text color="gray.600">Category:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.Category}
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" mt={2}>
+                    <Text color="gray.600">Remarks:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.Remarks}
+                    </Text>
+                  </Flex>
+                </Box>
+                <Box bg="gray.200" mt={2} p={2} borderRadius="md" boxShadow="md">
+                  <Text fontSize="xl" fontWeight="bold" color="gray.800">
+                    Contact Details
                   </Text>
-                </Flex>
-                <div style={{ textAlign: "center" }}>
-                  <Link to="/tabledata">
-                    <button
-                      style={{
-                        padding: "10px 20px",
-                        border: "1px solid black",
-                        borderRadius: "5px",
-                        marginRight: "10px",
-                        backgroundColor: "white",
-                        transition: "0.3s ease-in-out",
-                        boxShadow: "0 1rem 2rem rgba(0,0,0,0.2)",
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                          "rgb(220, 220, 220)";
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = "white";
-                      }}
-                    >
-                      Go Back
-                    </button>
-                  </Link>
-                  <Link to={`/editpage/${data._id}`}>
-                    <button
-                      style={{
-                        padding: "10px 20px",
-                        border: "1px solid teal",
-                        borderRadius: "5px",
-                        backgroundColor: "teal",
-                        color: "white",
-                        transition: "0.3s ease-in-out",
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                          "rgb(80, 227, 194)";
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = "teal";
-                      }}
-                    >
-                      Edit
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </Stack>
+                  <Divider mt={2} mb={4} />
+                  <Flex justify="space-between">
+                    <Text color="gray.600">Address:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.Address}
+                    </Text>
+                  </Flex>
+                  <Flex justify="space-between" mt={2}>
+                    <Text color="gray.600">Phone Number:</Text>
+                    <Text fontWeight="bold" color="gray.800">
+                      {data.PhoneNumber}
+                    </Text>
+                  </Flex>
+                </Box>
+              </Flex>
+            </Box>
           </Box>
+            <div style={{textAlign: "center", marginTop: "10px" }}>
+              <Link to="/tabledata">
+                <Button
+                  px={6}
+                  py={3}
+                  border="1px solid black"
+                  borderRadius="5px"
+                  bg="white"
+                  _hover={{ bg: "gray.300" }}
+                  transition="0.3s ease-in-out"
+                  boxShadow="0 1rem 2rem rgba(0,0,0,0.2)"
+                  mr={4}
+                >
+                  Go Back
+                </Button>
+              </Link>
+              <Link to={`/editpage/${data._id}`}>
+                <Button
+                  px={6}
+                  py={3}
+                  border="1px solid teal"
+                  borderRadius="5px"
+                  bg="teal"
+                  color="white"
+                  _hover={{ bg: "teal.500" }}
+                  transition="0.3s ease-in-out"
+                >
+                  Edit
+                </Button>
+              </Link>
+            </div>
         </Box>
+
       )}
     </>
   );
