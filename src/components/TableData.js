@@ -30,14 +30,28 @@ function TableData() {
   const [postsPerPage, setPostsPerPage] = useState(9);
   const [selectedOption, setSelectedOption] = useState("desc");
   const [selectedFilter, setSelectedFilter] = useState([]);
-  const {fnstore}=useContext(context)
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { fnstore } = useContext(context)
   const toast = useToast();
-  const handleOptionChange = (e) => {
-    setSelectedOption(e.target.value);
+
+
+  // const handleOptionChange = (e) => {
+  //   setSelectedOption(e.target.value);
+  // };
+
+  // const handleFilterChange = (e) => {
+  //   const value = e.target.value;
+  //   if (selectedFilter.includes(value)) {
+  //     setSelectedFilter(selectedFilter.filter((item) => item !== value));
+  //   } else {
+  //     setSelectedFilter([...selectedFilter, value]);
+  //   }
+  // };
+  const handleOptionChange = (value) => {
+    setSelectedOption(value);
   };
 
-  const handleFilterChange = (e) => {
-    const value = e.target.value;
+  const handleFilterChange = (value) => {
     if (selectedFilter.includes(value)) {
       setSelectedFilter(selectedFilter.filter((item) => item !== value));
     } else {
@@ -119,7 +133,7 @@ function TableData() {
   }
   useEffect(() => {
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter, selectedOption]);
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
@@ -142,7 +156,7 @@ function TableData() {
             </div>
           </td>
         );
-      case "Inactive":
+      case "Completed":
         return (
           <td>
             <div
@@ -184,7 +198,7 @@ function TableData() {
       {loading ? (
         <>
           <Navbar />
-          <MyLoader/>
+          <MyLoader />
         </>
       ) : (
         <>
@@ -243,7 +257,7 @@ function TableData() {
               <li className="sign-in" onClick={closeMobileMenu}>
                 <Link to="#">
                   <img
-                      src="https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
+                    src="https://png.pngtree.com/png-clipart/20221207/ourmid/pngtree-business-man-avatar-png-image_6514640.png"
                     alt="img"
                     style={{ width: "50px", borderRadius: "50%" }}
                   />
@@ -256,16 +270,9 @@ function TableData() {
               </li>
             </ul>
           </div>
-            <div className="Tablecontainer">
+          <div className="Tablecontainer">
             <table
-                className="responsive-table"
-              // css={{
-              //   backgroundColor: "#f2f2f2",
-              //   border: "1px solid #ccc",
-              //   fontSize: "14px",
-              //   color: "#333",
-              //   padding: "10px",
-              // }}
+              className="responsive-table"
             >
               <thead>
                 <tr>
@@ -277,27 +284,80 @@ function TableData() {
                   <th scope="col">Status</th>
                   <th scope="col">Amount</th>
                   <th scope="col">Rate</th>
-                  <th scope="col">
+                  <th scope="col" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                     Actions &nbsp;
-                    <div className="dropdown-Tablecontainer">
-                      <button className="dropdown-button">Filter & Sort</button>
+                    <div className={`dropdown-Tablecontainer ${showDropdown ? 'show-dropdown' : ''}`}>
+                      <Button
+                        colorScheme="twitter"
+                        className="dropdown-button"
+                        onClick={() => setShowDropdown(!showDropdown)}
+                      >
+                        Filter & Sort
+                      </Button>
                       <div className="dropdown-content">
-                        <input type="radio" id="asc" name="sort" value="asc" checked={selectedOption === "asc"}
-                          onChange={handleOptionChange} />
-                        <label for="asc">Ascending</label><br />
-                        <input type="radio" id="desc" name="sort" value="desc" checked={selectedOption === "desc"}
-                          onChange={handleOptionChange} />
-                        <label for="desc">Descending</label><br />
-                        <hr style={{ marginTop: '5px', border: '1px solid ' }} />
-                        <input type="checkbox" id="Gold" name="Gold" value="Gold" checked={selectedFilter.includes("Gold")}
-                          onChange={handleFilterChange} />
-                        <label for="Gold">Gold</label><br />
-                        <input type="checkbox" id="Silver" name="Silver" value="Silver" checked={selectedFilter.includes("Silver")}
-                          onChange={handleFilterChange} />
-                        <label for="Silver">Silver</label><br />
-                        <input type="checkbox" id="Bronze" name="Bronze" value="Bronze" checked={selectedFilter.includes("Bronze")}
-                          onChange={handleFilterChange} />
-                        <label for="Bronze">Bronze</label><br />
+                        <div>
+                          <label>Sort:</label>
+                          <div style={{ display: 'flex', flexDirection: 'row' }}>
+                              <Button
+                              textColor='black'
+                                bg={selectedOption === 'asc' ? 'blue' : 'white'}
+                                className={`sort-button ${selectedOption === 'asc' ? 'selected' : ''}`}
+                                onClick={() => handleOptionChange('asc')}
+                              >
+                                Ascending
+                              </Button>
+                              <Button
+                                textColor='black'
+                                bg={selectedOption === 'desc' ? 'blue' : 'white'}
+                                className={`sort-button ${selectedOption === 'desc' ? 'selected' : ''}`}
+                                onClick={() => handleOptionChange('desc')}
+                              >
+                                Descending
+                              </Button>
+                          </div>
+                        </div>
+                        <hr />
+                        <div>
+                          <label>Filter:</label>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <Button
+                              className={`filter-button ${selectedFilter.includes('Gold') ? 'selected' : ''}`}
+                              onClick={() => handleFilterChange('Gold')}
+                            >
+                              Gold
+                            </Button>
+                            <Button
+                              className={`filter-button ${selectedFilter.includes('Silver') ? 'selected' : ''}`}
+                              onClick={() => handleFilterChange('Silver')}
+                            >
+                              Silver
+                            </Button>
+                            <Button
+                              className={`filter-button ${selectedFilter.includes('Bronze') ? 'selected' : ''}`}
+                              onClick={() => handleFilterChange('Bronze')}
+                            >
+                              Bronze
+                            </Button>
+                              <Button
+                                className={`filter-button ${selectedFilter.includes('bike') ? 'selected' : ''}`}
+                                onClick={() => handleFilterChange('bike')}
+                              >
+                                Bike
+                              </Button>
+                              <Button
+                                className={`filter-button ${selectedFilter.includes('cycle') ? 'selected' : ''}`}
+                                onClick={() => handleFilterChange('cycle')}
+                              >
+                                Bronze
+                              </Button>
+                              <Button
+                                className={`filter-button ${selectedFilter.includes('others') ? 'selected' : ''}`}
+                                onClick={() => handleFilterChange('others')}
+                              >
+                                Others
+                              </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </th>
@@ -353,7 +413,7 @@ function TableData() {
                 }
               </tbody>
             </table>
-            </div>
+          </div>
           <Pagination
             totalPosts={filteredData.length}
             postsPerPage={postsPerPage}

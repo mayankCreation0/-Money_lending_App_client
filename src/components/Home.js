@@ -58,10 +58,11 @@ const HomePage = () => {
         onClose();
       }, 1000);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       toast({
         title: "Something went wrong",
-        description: "We've created your account for you.",
+        description: "please fill the input fields correctly",
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -206,7 +207,7 @@ const HomePage = () => {
                             required
                           >
                             <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="Completed">Completed</option>
                             <option value="Renew">Renew</option>
                           </Select>
                         </FormControl>
